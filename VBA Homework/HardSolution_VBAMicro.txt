@@ -1,0 +1,94 @@
+Sub stock_check()
+    Dim Count1 As Long
+    Dim Tot_vol As Double
+    Dim J As Integer
+    Dim Open_amt As Double
+    Dim Close_amt As Double
+    Dim Greatest_Inc As Double
+    Dim Greatest_Dec As Double
+    Dim Gretaest_Vol As Double
+    Dim Yearly_change As Double
+
+    Greatest_Inc = 0
+    Gretaest_dec = 1
+    Greatest_vol = 0
+
+' get the total number of rows in the data set
+    Count1 = Cells(Rows.Count, 1).End(xlUp).Row - 1
+
+'Initilizing the variable
+    Tot_vol = 0
+    J = 2
+    For i = 2 To Count1
+       If (Cells(i, 1).Value = Cells(i + 1, 1).Value) Then
+           If (Cells(i, 2).Value = "20160101") Then
+               Open_amt = Cells(i, 3).Value
+           End If
+
+'calculating the total_volume for a scrip
+       Tot_vol = Tot_vol + Cells(i, 7).Value
+       Else
+        'writing Ticket to excel
+            Cells(J, 9) = Cells(i, 1).Value
+         
+         'Documenting the total volume
+            Cells(J, 10).Value = Tot_vol
+            Close_amt = Cells(i, 3).Value
+            Cells(J, 11).Value = Close_amt
+            Cells(J, 12).Value = Open_amt
+            Cells(J, 13).Value = Close_amt - Open_amt
+            Yearly_change = Cells(J, 13).Value
+                If Open_amt <> 0 And Close_amt <> 0 Then
+                    Cells(J, 14).Value = Round((Open_amt / Close_amt) * 100, 0)
+                 End If
+        
+        'Setting the color to the cell as per the criteria
+        If Cells(J, 13).Value > 0 Then
+                Cells(J, 14).Interior.ColorIndex = 4
+         Else
+                Cells(J, 14).Interior.ColorIndex = 3
+         End If
+
+         'Finding the greatest volume
+          If Tot_vol > Greatest_vol Then
+              Greatest_vol = Tot_vol
+              Ticker_GV = Cells(i, 1).Value
+           End If
+           
+           'Finding the greatest Inc
+            If Yearly_change > Greatest_Inc Then
+                Greatest_Inc = Yearly_change
+                 Ticker_inc = Cells(i, 1).Value
+            End If
+  
+             'Finding the greatest dec
+             If Yearly_change < Greatest_Dec Then
+                Greatest_Dec = Yearly_change
+                Ticker_dec = Cells(i, 1).Value
+             End If
+             
+        J = J + 1
+
+     End If
+
+  Next i
+
+
+  Cells(3, 17).Value = Ticker_inc
+  Cells(3, 18).Value = Greatest_Inc
+  Cells(4, 17).Value = Ticker_dec
+  Cells(4, 18).Value = Greatest_Dec
+  Cells(5, 17).Value = Ticker_GV
+  Cells(5, 18).Value = Greatest_vol
+
+End Sub
+
+ 
+
+
+
+
+ 
+
+
+
